@@ -163,3 +163,41 @@ export const getAllPurchasesAdmin = async (req, res) => {
     res.json({ success: false, message: error.message })
   }
 }
+// ✅ Admin hard delete course (no restrictions)
+export const deleteCourseAdmin = async (req, res) => {
+  try {
+    const { courseId } = req.params
+
+    const course = await Course.findById(courseId)
+    if (!course) {
+      return res.json({ success: false, message: 'Course not found.' })
+    }
+
+    const courseObjectId = course._id
+    const courseIdString = course._id.toString()
+
+    // Cleanup so users don't keep broken enrollments
+    await User.updateMany(
+      { enrolledCourses: courseObjectId },
+      { $pull: { enrolledCourses: courseObjectId } }
+    )
+
+    // Cleanup progress docs (your CourseProgress model stores courseId as string)
+    await CourseProgress.deleteMany({ courseId: courseIdString })
+
+    /**
+     * IMPORTANT:
+     * I am NOT deleting Purchase records on purpose (recommended),
+     * because you typically want audit/history and revenue stats to remain.
+     * If you *really* want to delete purchases too, uncomment:
+     *
+     * await Purchase.deleteMany({ courseId: courseObjectId })
+     */
+
+    await Course.findByIdAndDelete(courseObjectId)
+
+    return res.json({ success: true, message: 'Course deleted by admin.' })
+  } catch (error) {
+    return res.json({ success: false, message: error.message })
+  }
+}

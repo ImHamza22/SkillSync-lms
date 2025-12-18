@@ -6,6 +6,7 @@ import CourseDetails from './pages/student/CourseDetails'
 import CoursesList from './pages/student/CoursesList'
 import Dashboard from './pages/instructor/Dashboard'
 import AddCourse from './pages/instructor/AddCourse'
+import EditCourse from './pages/instructor/EditCourse'
 import MyCourses from './pages/instructor/MyCourses'
 import StudentsEnrolled from './pages/instructor/StudentsEnrolled'
 import Instructor from './pages/instructor/Instructor'
@@ -44,16 +45,18 @@ const App = () => {
         <Route path='/instructor' element={<Instructor />}>
           <Route path='/instructor' element={<Dashboard />} />
           <Route path='add-course' element={<AddCourse />} />
+          <Route path='edit-course/:id' element={<EditCourse />} />
           <Route path='my-courses' element={<MyCourses />} />
           <Route path='student-enrolled' element={<StudentsEnrolled />} />
         </Route>
 
-        <Route path='/admin' element={<Admin />}>
-          <Route path='/admin' element={<AdminDashboard />} />
-          <Route path='users' element={<ManageUsers />} />
-          <Route path='courses' element={<ManageCourses />} />
-          <Route path='purchases' element={<Purchases />} />
+        <Route path="/admin/*" element={<Admin />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="users" element={<ManageUsers />} />
+        <Route path="courses" element={<ManageCourses />} />
+        <Route path="purchases" element={<Purchases />} />
         </Route>
+
       </Routes>
     </div>
   )

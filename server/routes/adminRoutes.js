@@ -7,6 +7,7 @@ import {
   getAllUsersAdmin,
   setUserRoleAdmin,
   toggleCoursePublishAdmin,
+  deleteCourseAdmin, // ✅ added
 } from '../controllers/adminController.js'
 import { protectAdmin } from '../middlewares/authMiddleware.js'
 
@@ -34,6 +35,11 @@ adminRouter.post('/users/set-role', protectAdmin, setUserRoleAdmin)
 // Courses
 adminRouter.get('/courses', protectAdmin, getAllCoursesAdmin)
 adminRouter.post('/courses/toggle-publish', protectAdmin, toggleCoursePublishAdmin)
+
+
+
+// ✅ Admin hard delete course (no restrictions)
+adminRouter.delete('/courses/:courseId', protectAdmin, deleteCourseAdmin)
 
 // Purchases
 adminRouter.get('/purchases', protectAdmin, getAllPurchasesAdmin)
