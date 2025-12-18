@@ -23,6 +23,12 @@ export const clerkWebhooks = async (req, res) => {
     // Getting Data from request body
     const { data, type } = req.body
 
+    // Clerk sends metadata in snake_case; keeping a safe fallback for other shapes.
+    const extractedRole =
+      data?.public_metadata?.role ||
+      data?.publicMetadata?.role ||
+      'student'
+
     // Switch Cases for differernt Events
     switch (type) {
       case 'user.created': {
@@ -32,7 +38,7 @@ export const clerkWebhooks = async (req, res) => {
           email: data.email_addresses[0].email_address,
           name: data.first_name + " " + data.last_name,
           imageUrl: data.image_url,
-          resume: ''
+          role: extractedRole,
         }
         await User.create(userData)
         res.json({})
@@ -44,6 +50,7 @@ export const clerkWebhooks = async (req, res) => {
           email: data.email_addresses[0].email_address,
           name: data.first_name + " " + data.last_name,
           imageUrl: data.image_url,
+          role: extractedRole,
         }
         await User.findByIdAndUpdate(data.id, userData)
         res.json({})

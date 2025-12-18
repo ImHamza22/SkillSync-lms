@@ -9,28 +9,36 @@ import AddCourse from './pages/instructor/AddCourse'
 import MyCourses from './pages/instructor/MyCourses'
 import StudentsEnrolled from './pages/instructor/StudentsEnrolled'
 import Instructor from './pages/instructor/Instructor'
+import Admin from './pages/admin/Admin'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import ManageUsers from './pages/admin/ManageUsers'
+import ManageCourses from './pages/admin/ManageCourses'
+import Purchases from './pages/admin/Purchases'
 import 'quill/dist/quill.snow.css'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify'
 import Player from './pages/student/Player'
 import MyEnrollments from './pages/student/MyEnrollments'
+import BootstrapAdmin from './pages/student/BootstrapAdmin'
 import Loading from './components/student/Loading'
 
 const App = () => {
 
   const isInstructorRoute = useMatch('/instructor/*');
+  const isAdminRoute = useMatch('/admin/*')
 
   return (
     <div className="text-default min-h-screen bg-white">
       <ToastContainer />
       {/* Render Student Navbar only if not on instructor routes */}
-      {!isInstructorRoute && <Navbar />}
+      {!isInstructorRoute && !isAdminRoute && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/course/:id" element={<CourseDetails />} />
         <Route path="/course-list" element={<CoursesList />} />
         <Route path="/course-list/:input" element={<CoursesList />} />
         <Route path="/my-enrollments" element={<MyEnrollments />} />
+        <Route path="/admin-setup" element={<BootstrapAdmin />} />
         <Route path="/player/:courseId" element={<Player />} />
         <Route path="/loading/:path" element={<Loading />} />
         <Route path='/instructor' element={<Instructor />}>
@@ -38,6 +46,13 @@ const App = () => {
           <Route path='add-course' element={<AddCourse />} />
           <Route path='my-courses' element={<MyCourses />} />
           <Route path='student-enrolled' element={<StudentsEnrolled />} />
+        </Route>
+
+        <Route path='/admin' element={<Admin />}>
+          <Route path='/admin' element={<AdminDashboard />} />
+          <Route path='users' element={<ManageUsers />} />
+          <Route path='courses' element={<ManageCourses />} />
+          <Route path='purchases' element={<Purchases />} />
         </Route>
       </Routes>
     </div>

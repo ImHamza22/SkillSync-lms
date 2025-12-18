@@ -12,7 +12,7 @@ const Navbar = () => {
 
   const isCoursesListPage = location.pathname.includes('/course-list');
 
-  const { backendUrl, isInstructor, setIsInstructor, navigate, getToken } = useContext(AppContext)
+  const { backendUrl, isInstructor, setIsInstructor, isAdmin, navigate, getToken } = useContext(AppContext)
 
   const { openSignIn } = useClerk()
   const { user } = useUser()
@@ -46,11 +46,23 @@ const Navbar = () => {
       <div className="md:flex hidden items-center gap-5 text-gray-500">
         <div className="flex items-center gap-5">
           {
-            user && <>
-              <button onClick={becomeInstructor}>{isInstructor ? 'Instructor Dashboard' : 'Become Instructor'}</button>
-              | <Link to='/my-enrollments' >My Enrollments</Link>
-            </>
-          }
+          user && (
+          <>
+          {isAdmin ? (
+          <>
+          <Link to="/admin">Admin Dashboard</Link>
+          </>
+          ) : (
+          <>
+          <button onClick={becomeInstructor}>
+            {isInstructor ? "Instructor Dashboard" : "Become Instructor"}
+          </button>
+          | <Link to="/my-enrollments">My Enrollments</Link>
+          </>
+        )}
+        </>
+      )
+      }
         </div>
         {user
           ? <UserButton />
@@ -61,6 +73,10 @@ const Navbar = () => {
       {/* For Phone Screens */}
       <div className='md:hidden flex items-center gap-2 sm:gap-5 text-gray-500'>
         <div className="flex items-center gap-1 sm:gap-2 max-sm:text-xs">
+          {isAdmin && <>
+            <Link to='/admin' >Admin</Link>
+            |
+          </>}
           <button onClick={becomeInstructor}>{isInstructor ? 'Instructor Dashboard' : 'Become Instructor'}</button>
           | {
             user && <Link to='/my-enrollments' >My Enrollments</Link>
